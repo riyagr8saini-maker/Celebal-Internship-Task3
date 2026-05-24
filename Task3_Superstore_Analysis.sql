@@ -130,6 +130,39 @@ FROM customer_sales cs
 ORDER BY SalesRank;
 
 
+-- Top 10 customers by sales
+WITH customer_sales AS (
+    SELECT c.`Customer ID`, c.`Customer Name`, SUM(s.Sales) AS TotalSales
+    FROM sales s
+    JOIN customers c ON s.`Customer ID` = c.`Customer ID`
+    GROUP BY c.`Customer ID`, c.`Customer Name`
+)
+SELECT *
+FROM customer_sales
+ORDER BY TotalSales DESC
+LIMIT 10;
+
+-- Bottom 10 customers by sales
+WITH customer_sales AS (
+    SELECT c.`Customer ID`, c.`Customer Name`, SUM(s.Sales) AS TotalSales
+    FROM sales s
+    JOIN customers c ON s.`Customer ID` = c.`Customer ID`
+    GROUP BY c.`Customer ID`, c.`Customer Name`
+)
+SELECT *
+FROM customer_sales
+ORDER BY TotalSales ASC
+LIMIT 10;
+
+-- Customers with only one order
+SELECT c.`Customer ID`, c.`Customer Name`, COUNT(DISTINCT o.`Order ID`) AS OrderCount
+FROM orders o
+JOIN customers c ON o.`Customer ID` = c.`Customer ID`
+GROUP BY c.`Customer ID`, c.`Customer Name`
+HAVING COUNT(DISTINCT o.`Order ID`) = 1;
+
+
+
 
 
 
